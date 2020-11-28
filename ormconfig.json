@@ -2,7 +2,7 @@
   "type": "mysql",
   "host": "localhost",
   "port": 3306,
-  "username": "sammy",
+  "username": "john",
   "password": "11197811aS@",
   "database": "vk",
   "entities": ["src/**/*.entity{.ts,.js}"],
