@@ -7,8 +7,5 @@ export class User {
   id!: number;
 
   @Column({ nullable: true, unique: true })
-  discordId!: number;
-
-  @OneToOne(() => FullName, (fullName) => fullName.user)
-  fullName!: FullName;
+  discordId!: string;
 }

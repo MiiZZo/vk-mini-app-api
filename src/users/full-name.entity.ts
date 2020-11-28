@@ -11,7 +11,4 @@ export class FullName {
 
   @Column()
   lastName!: string;
-
-  @OneToOne(() => User, (user) => user.fullName)
-  user!: User;
 }

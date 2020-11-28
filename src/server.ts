@@ -1,10 +1,11 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import { Strategy } from "passport-discord";
 import { createConnection, getRepository } from "typeorm";
 import { User } from "./users/user.entity";
-import { usersRouter } from "./users/users";
+import { usersRouter } from "./users/users.router";
 import passport from "passport";
 import session from "express-session";
+import { checkAuth } from "./common/check-auth";
 
 const scopes = ["identify"];
 
@@ -20,7 +21,9 @@ const bootstrap = async () => {
   try {
     const app = express();
 
-    // await createConnection();
+    createConnection().then((value) => {
+      console.log(value);
+    });
 
     passport.use(
       new Strategy(
@@ -45,6 +48,8 @@ const bootstrap = async () => {
       )
     );
 
+    app.use(express.json());
+
     app.use(
       session({
         secret: "youshallnotpass",
@@ -55,12 +60,6 @@ const bootstrap = async () => {
 
     app.use(passport.initialize());
     app.use(passport.session());
-
-    //@ts-ignore
-    function checkAuth(req, res, next) {
-      if (req.isAuthenticated()) return next();
-      res.send("not logged in :(");
-    }
 
     app.get("/auth/discord", function (req, res, next) {
       passport.authenticate("discord", { scope: scopes })(req, res, next);
@@ -75,9 +74,6 @@ const bootstrap = async () => {
     );
 
     app.get("/", checkAuth, (req, res) => {
-      if (req.user) {
-        console.log(req.user);
-      }
       res.json(req.user);
     });
 
